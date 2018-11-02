@@ -1,9 +1,9 @@
 const express = require('express');
+const methodOverride = require('method-override')
 const app = express();
 var exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
 
 // mock array of projects
 // let reviews = [
@@ -11,6 +11,8 @@ const bodyParser = require('body-parser');
 //   { title: "Awesome Movie", movieTitle: "Titanic" }
 // ]
 
+//override with POST having ?_method=DELETE or ?_method=PUT
+app.use(methodOverride('_method'))
 // per tutorial, this must appear AFTER const app = express() and before routes
 app.use(bodyParser.urlencoded({extended: true}));
 // body-parser gives new attribute of req obj called "req.body" and this will contain the form data! :D :D :D
@@ -44,6 +46,26 @@ app.get('/', (req, res) => {
 //   res.render("secret");
 // })
 
+//CREATE
+app.post('/reviews', (req, res) => {
+  Review.create(req.body).then((review) => {
+    console.log(review)
+    res.redirect(`/reviews/${review._id}`) //redirect
+  }).catch((err) => {
+    console.log(err.message)
+  })
+});
+
+app.put('/reviews/:id', (req, res) => {
+  Review.findByIdAndUpdate(req.params.id, req.body)
+    .then(review => {
+      res.redirect(`/reviews/${review._id}`)
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+});
+
 app.get('/reviews/new', (req, res) => {
   res.render('reviews-new', {});
 });
@@ -56,25 +78,22 @@ app.get('/reviews/:id', (req, res) => {
   })
 });
 
+// Edit
+app.get('/reviews/:id/edit', (req, res) => {
+  Review.findById(req.params.id, function(err, review) {
+    res.render('reviews-edit', {review: review});
+  })
+});
+
 app.listen(3000, () => {
   console.log('App listening on port 3000!')
-});
-
-app.post('/reviews', (req, res) => {
-  Review.create(req.body).then((review) => {
-    console.log(review);
-    res.redirect('/');
-  }).catch((err) => {
-    console.log(err.message);
-  })
-});
-
-//CREATE
-app.post('/reviews', (req, res) => {
-  Review.create(req.body).then((review) => {
-    console.log(review)
-    res.redirect(`/reviews/${review._id}`) //redirect
-  }).catch((err) => {
-    console.log(err.message)
-  })
 })
+
+// app.post('/reviews', (req, res) => {
+//   Review.create(req.body).then((review) => {
+//     console.log(review);
+//     res.redirect('/');
+//   }).catch((err) => {
+//     console.log(err.message);
+//   })
+// });
