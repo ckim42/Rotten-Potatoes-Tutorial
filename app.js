@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 var exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
 
 // mock array of projects
 // let reviews = [
@@ -9,13 +11,18 @@ const mongoose = require('mongoose');
 //   { title: "Awesome Movie", movieTitle: "Titanic" }
 // ]
 
-
-
+// per tutorial, this must appear AFTER const app = express() and before routes
+app.use(bodyParser.urlencoded({extended: true}));
+// body-parser gives new attribute of req obj called "req.body" and this will contain the form data! :D :D :D
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 mongoose.connect('mongodb://localhost/rotten-potatoes', { useNewUrlParser: true });
-const Review = require('./models/review');
+const Review = mongoose.model('Review', {
+  title: String,
+  description: String,
+  movieTitle: String
+});
 
 // INDEX
 app.get('/', (req, res) => {
@@ -26,12 +33,35 @@ app.get('/', (req, res) => {
         // renders the page with the reviews data referred to as reviews
         res.render('reviews-index', { reviews: reviews });
     })
-    // error catch 
+    // error catch
     .catch(err => {
       console.log(err);
     })
 })
 
+//test
+// app.get('/secret', (req, res) => {
+//   res.render("secret");
+// })
+
+app.get('/reviews/new', (req, res) => {
+  res.render('reviews-new', {});
+})
+
 app.listen(3000, () => {
   console.log('App listening on port 3000!')
+})
+
+app.post('/reviews', (req, res) => {
+  Review.create(req.body).then((review) => {
+    console.log(review);
+    res.redirect('/');
+  }).catch((err) => {
+    console.log(err.message);
+  })
+})
+
+app.post('/reviews', (req, res) => {
+  console.log(req.body);
+  // res.render('reviews-new', {});
 })
