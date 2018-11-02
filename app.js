@@ -85,9 +85,19 @@ app.get('/reviews/:id/edit', (req, res) => {
   })
 });
 
+// DELETE
+app.delete('/reviews/:id', function (req, res) {
+  console.log("DELETE review")
+  Review.findByIdAndRemove(req.params.id).then((review) => {
+    res.redirect('/');
+  }).catch((err) => {
+    console.log(err.message);
+  })
+});
+
 app.listen(3000, () => {
   console.log('App listening on port 3000!')
-})
+});
 
 // app.post('/reviews', (req, res) => {
 //   Review.create(req.body).then((review) => {
