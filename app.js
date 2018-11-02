@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
     .catch(err => {
       console.log(err);
     })
-})
+});
 
 //test
 // app.get('/secret', (req, res) => {
@@ -46,11 +46,19 @@ app.get('/', (req, res) => {
 
 app.get('/reviews/new', (req, res) => {
   res.render('reviews-new', {});
-})
+});
+
+app.get('/reviews/:id', (req, res) => {
+  Review.findbyId(req.params.id).then((review) => {
+    res.render('reviews-show', { review: review })
+  }).catch((err) => {
+    console.log(err.message);
+  })
+});
 
 app.listen(3000, () => {
   console.log('App listening on port 3000!')
-})
+});
 
 app.post('/reviews', (req, res) => {
   Review.create(req.body).then((review) => {
@@ -59,9 +67,14 @@ app.post('/reviews', (req, res) => {
   }).catch((err) => {
     console.log(err.message);
   })
-})
+});
 
+//CREATE
 app.post('/reviews', (req, res) => {
-  console.log(req.body);
-  // res.render('reviews-new', {});
+  Review.create(req.body).then((review) => {
+    console.log(review)
+    res.redirect(`/reviews/${review._id}`) //redirect
+  }).catch((err) => {
+    console.log(err.message)
+  })
 })
