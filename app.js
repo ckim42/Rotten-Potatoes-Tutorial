@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 var exphbs = require('express-handlebars');
 let reviews = [
-  { title: "Great Review", movieTitle: "Batman II" },
+  { title: "Review", movieTitle: "Batman II" },
   { title: "Awesome Movie", movieTitle: "Titanic" }
 ]
 
