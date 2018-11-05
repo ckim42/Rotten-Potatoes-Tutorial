@@ -1,11 +1,15 @@
-const express = require('express')
+const express = require('express');
+const bodyParser = require('body-parser');
 const app = express()
+app.use(bodyParser.urlencoded({ extended: true })); //must appear after const app = express() and before routes
+
 var exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/rotten-potatoes');
 
 const Review = mongoose.model('Review', { //model is capitalized and singular, like with classes
   title: String,
+  description: String,
   movieTitle: String
 });
 
@@ -27,6 +31,19 @@ app.get('/', (req, res) => { //Index
     .catch(err => {
       console.log(err);
     })
+});
+
+app.get('/reviews/new', (req, res) => {
+  res.render('reviews-new', {});
+});
+
+app.post('/reviews', (req, res) => { //Create
+  Review.create(req.body).then((review) => {
+    console.log(review);
+    res.redirect('/');
+  }).catch((err) => {
+    console.log(err.message);
+  })
 });
 
 app.listen(3000, () => {
