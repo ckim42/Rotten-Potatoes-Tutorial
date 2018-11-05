@@ -1,7 +1,9 @@
 const express = require('express');
+const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
-const app = express()
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true })); //must appear after const app = express() and before routes
+app.use(methodOverride('_method'));
 
 var exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
@@ -45,6 +47,12 @@ app.get('/reviews/:id', (req, res) => {
   })
 });
 
+app.get('/reviews/:id/edit', (req, res) => {
+  Review.findById(req.params.id, function(err, review) {
+    res.render('reviews-edit', {review: review});
+  })
+});
+
 app.post('/reviews', (req, res) => { //Create
   Review.create(req.body).then((review) => {
     console.log(review)
@@ -52,6 +60,16 @@ app.post('/reviews', (req, res) => { //Create
   }).catch((err) => {
     console.log(err.message)
   })
+});
+
+app.put('/reviews/:id', (req, res) => {
+  Review.findByIdAndUpdate(req.params.id, req.body)
+    .then(review => {
+      res.redirect(`/reviews/${review._id}`)
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
 });
 
 app.listen(3000, () => {
