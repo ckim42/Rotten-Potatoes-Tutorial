@@ -7,7 +7,7 @@ const reviews = require('./controllers/reviews');
 var mongoose = require('mongoose');
 var exphbs = require('express-handlebars');
 
-mongoose.connect('mongodb://localhost/rotten-potatoes');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes');
 
 app.use(methodOverride('_method'));
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
