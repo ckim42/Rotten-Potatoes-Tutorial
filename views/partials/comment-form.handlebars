@@ -1,10 +1,11 @@
 <form action="/reviews/comments" method="post">
+  <!-- HIDDEN FIELD: reviewId -->
   <input type="hidden" value="{{review._id}}" name="reviewId">
   <fieldset>
     <legend>Add a Comment</legend>
     <!-- TITLE -->
     <div class="form-group">
-      <label for="comment-title">Title</label><br>
+      <label form="comment-title">Title</label><br>
       <input class="form-control"
         id="comment-title"
         type="text"
@@ -14,12 +15,12 @@
 
     <!-- DESCRIPTION -->
     <div class="form-group">
-      <label for="comment-comment">Description</label><br>
+      <label for="comment-content">Description</label><br>
       <textarea class="form-control"
-      id="comment-content"
-      name="content"
-      rows="10"
-      placeholder="Your comment..."/></textarea>
+        id="comment-content"
+        name="content"
+        rows="10"
+        placeholder="Your comment..."/></textarea>
     </div>
   </fieldset>
 
