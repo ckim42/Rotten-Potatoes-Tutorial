@@ -3,7 +3,7 @@ const Comment = require('../models/comment');
 const express = require('express');
 const app = express();
 
-module.exports = (app) => {
+module.exports = (app, review) => {
 
   app.get('/', (req, res) => { //Index
     Review.find()
