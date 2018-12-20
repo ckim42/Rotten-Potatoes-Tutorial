@@ -16,8 +16,8 @@
     "express-handlebars": "^3.0.0",
     "helper-moment": "^0.2.0",
     "method-override": "^3.0.0",
-    "mongoose": "^5.3.9",
-    "nodemon": "^1.18.5"
+    "mongoose": "^5.4.0",
+    "nodemon": "^1.18.9"
   },
   "devDependencies": {},
   "repository": {
